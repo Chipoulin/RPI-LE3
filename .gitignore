@@ -1,0 +1,5 @@
+.*.swp
+compileur/*
+lib/*
+target-pc/*
+target-pi/*
