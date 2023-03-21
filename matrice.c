@@ -2,6 +2,11 @@
 
 void InitMatrice()
 {
+	if (!bcm2835_init()) {
+		printf("Unable to init bcm2835.\n");
+		return 2;
+	}
+	
     bcm2835_spi_begin();
 	bcm2835_spi_setBitOrder(BCM2835_SPI_BIT_ORDER_MSBFIRST);      // The default
 	bcm2835_spi_setDataMode(BCM2835_SPI_MODE0);                   // The default
@@ -15,6 +20,12 @@ void InitMatrice()
 	WriteMatrice(0x0b,0x07);
 	WriteMatrice(0x0c,0x01);
 	WriteMatrice(0x0f,0x00);
+}
+
+void WriteMatrice_byte(char DATA)
+{
+	bcm2835_gpio_write(MATRICE_PIN_CS,LOW);
+	bcm2835_spi_transfer(DATA);
 }
 
 void WriteMatrice(char address1, char dat1){
