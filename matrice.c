@@ -4,7 +4,7 @@ void InitMatrice()
 {
 	if (!bcm2835_init()) {
 		printf("Unable to init bcm2835.\n");
-		return 2;
+		return;
 	}
 	
     bcm2835_spi_begin();
@@ -13,7 +13,7 @@ void InitMatrice()
 	bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_256); // The default
 	bcm2835_gpio_fsel(MATRICE_PIN_CS, BCM2835_GPIO_FSEL_OUTP); 
 	bcm2835_gpio_write(explo[0][0],HIGH);
-	Delay_xms(50);
+	DELAY(50);
 
 	WriteMatrice(0x09,0x00);
 	WriteMatrice(0x0a,0x03);
@@ -49,18 +49,39 @@ void PrintNuclear() {
 
 void ExploSequence() {
     for(char i = 0; i < 3; i++){
-        for(char i = 1; i < 9; i++) {
-            WriteMatrice(i, nuclear[i-1]);
+        for(char y = 1; y < 9; y++) {
+            WriteMatrice(y, explo[i][y-1]);
         }
         DELAY(1000);
     }
-    
-    
 
+	CleanMatrix();
+    
+	DELAY(1000);
 
-    for(char i = 2; i < 7; i++){
-        for(char i = 1; i < 9; i++) {
-            WriteMatrice(i, nuclear[i-1]);
+	for(char i = 1; i < 9; i++) {
+        WriteMatrice(i, explo[2][i-1]);
+    }
+    
+	DELAY(1000);
+
+	CleanMatrix();
+    
+	DELAY(1000);
+
+	for(char i = 1; i < 9; i++) {
+        WriteMatrice(i, explo[2][i-1]);
+    }
+    
+	DELAY(1000);
+
+	CleanMatrix();
+    
+	DELAY(1000);
+
+    for(char i = 3; i < 7; i++){
+        for(char y = 1; y < 9; y++) {
+            WriteMatrice(y, explo[i][y-1]);
         }
         DELAY(1000);
     }
@@ -71,3 +92,14 @@ void CleanMatrix() {
 		WriteMatrice(i, clean[i-1]);
 	}
 }
+
+// void main()
+// {
+// 	InitMatrice();
+// 	PrintWarning();
+// 	DELAY(1000);
+// 	PrintNuclear();
+// 	DELAY(1000);
+// 	ExploSequence();
+// 	CleanMatrix();
+// }

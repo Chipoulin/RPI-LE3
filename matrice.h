@@ -1,6 +1,7 @@
 #include <bcm2835.h>
+#include <stdio.h>
 
-#define MATRICE_PIN_CS  26
+#define MATRICE_PIN_CS  RPI_GPIO_P1_26
 #define DELAY(x) bcm2835_delay((x));
 
 char clean[8] = {
