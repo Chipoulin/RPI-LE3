@@ -15,7 +15,7 @@ CCC=$(PATH_CC)/arm-linux-gnueabihf-gcc
 CXX=$(PATH_CC)/arm-linux-gnueabihf-g++
 AR=$(PATH_CC)/arm-linux-gnueabihf-gcc-ar
 
-all : screen_pc screen_pi
+all : screen_pi rfid matrix_test
 
 crea_lib : 
 	cd compileur && unzip tools-master.zip
@@ -63,4 +63,4 @@ install_prog: screen_pi
 	scp  screen_pi pi@192.168.143.111:/home/pi/screen/lib/target-pi/bin
 
 clean: 
-	rm -rf screen_pc screen_pi
+	rm -rf screen_pc screen_pi rfid matrix_test

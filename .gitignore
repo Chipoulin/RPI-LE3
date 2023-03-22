@@ -3,3 +3,4 @@ compileur/*
 lib/*
 target-pc/*
 target-pi/*
+test
