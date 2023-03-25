@@ -1,15 +1,4 @@
-#include <ncurses.h>
-#include <stdlib.h>
-#include <string.h>
-#include "bouton.h"
-
-typedef struct ville
-{
-    char nom[20];
-    int coorX;
-    int coorY;
-    int cible;
-} ville;
+#include "screen.h"
 
 void color(int i, int highlight, ville *villes, WINDOW *win)
 {
@@ -37,10 +26,6 @@ void color(int i, int highlight, ville *villes, WINDOW *win)
 }
 
 void afficherMap();
-void *threadNcurses(void *arg);
-
-//------------------variables globales thread------------------//
-
 
 //------------------main------------------//
 int main()

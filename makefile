@@ -43,7 +43,7 @@ crea_lib :
 	cd lib/ncurses-6.4/ && make install
 
 screen : screen.c bouton.c
-	$(CCC) -std=c11 $(PI_CFLAGS) $(PI_LDFLAGS) $^ -o $@ -lncurses -lbcm2835 -pthread
+	$(CCC) -std=c11 $(PI_CFLAGS) $(PI_LDFLAGS) $^ -o $@ -lncurses -lbcm2835
 	
 matrice : matrice.c matrice.h
 	$(CCC) -std=c11 $(PI_CFLAGS) $(PI_LDFLAGS) $^ -o $@ -lbcm2835
