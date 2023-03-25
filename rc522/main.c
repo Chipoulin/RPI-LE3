@@ -1968,7 +1968,7 @@ int get_card_info()
 
         if (cnt++ > 3){                 // display keep alive
             cnt = 0;
-            p_printf(BLUE,".");
+            // p_printf(BLUE,".");
         }
 
         if (status == TAG_NOTAG) {     // no card :wait)

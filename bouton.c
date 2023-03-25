@@ -93,11 +93,13 @@ int buttonHeldDown(int pin)
 void initMatriceBtn()
 {
     // define 4 inputs with pull up resistors
-    for (int i = 0; i < ROW_COUNT; i++)
+    int i;
+    for (i = 0; i < ROW_COUNT; i++)
         bcm2835_gpio_set_pud(rowPins[i], BCM2835_GPIO_PUD_UP);
 
     // define 4 outputs ans set them on high
-    for (int j = 0; j < COLUMN_COUNT; j++)
+    int j;
+    for (j = 0; j < COLUMN_COUNT; j++)
     {
         bcm2835_gpio_fsel(columnPins[j], BCM2835_GPIO_FSEL_OUTP);
         bcm2835_gpio_write(columnPins[j], HIGH);
@@ -107,11 +109,13 @@ void initMatriceBtn()
 int scanMatrix()
 {
     int btnIndex = 0;
-    for (int j = 0; j < COLUMN_COUNT; j++)
+    int j;
+    for (j = 0; j < COLUMN_COUNT; j++)
     {
         // every output pin is set on low
         bcm2835_gpio_write(columnPins[j], LOW);
-        for (int i = 0; i < ROW_COUNT; i++)
+        int i;
+        for (i = 0; i < ROW_COUNT; i++)
         {
             if (bcm2835_gpio_lev(rowPins[i]) == LOW)
             {

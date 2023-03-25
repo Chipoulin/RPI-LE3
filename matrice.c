@@ -128,20 +128,23 @@ void WriteMatrice(char address1, char dat1){
 }
 
 void PrintWarning() {
-	for(char i = 1; i < 9; i++) {
+	char i;
+	for(i = 1; i < 9; i++) {
 		WriteMatrice(i, warning[i-1]);
 	}
 }
 
 void PrintNuclear() {
-	for(char i = 1 ;i < 9; i++) {
+	char i;
+	for(i = 1 ;i < 9; i++) {
 		WriteMatrice(i, nuclear[i-1]);
 	}
 }
 
 void ExploSequence() {
-    for(char i = 0; i < 3; i++){
-        for(char y = 1; y < 9; y++) {
+	char i, y;
+    for(i = 0; i < 3; i++){
+        for(y = 1; y < 9; y++) {
             WriteMatrice(y, explo[i][y-1]);
         }
         DELAY(1000);
@@ -151,7 +154,7 @@ void ExploSequence() {
     
 	DELAY(1000);
 
-	for(char i = 1; i < 9; i++) {
+	for(i = 1; i < 9; i++) {
         WriteMatrice(i, explo[2][i-1]);
     }
     
@@ -161,7 +164,7 @@ void ExploSequence() {
     
 	DELAY(1000);
 
-	for(char i = 1; i < 9; i++) {
+	for(i = 1; i < 9; i++) {
         WriteMatrice(i, explo[2][i-1]);
     }
     
@@ -171,8 +174,8 @@ void ExploSequence() {
     
 	DELAY(1000);
 
-    for(char i = 3; i < 7; i++){
-        for(char y = 1; y < 9; y++) {
+    for(i = 3; i < 7; i++){
+        for(y = 1; y < 9; y++) {
             WriteMatrice(y, explo[i][y-1]);
         }
         DELAY(1000);
@@ -180,7 +183,8 @@ void ExploSequence() {
 }
 
 void CleanMatrix() {
-    for(char i = 1;i < 9;i++) {
+	char i;
+    for(i = 1;i < 9;i++) {
 		WriteMatrice(i, clean[i-1]);
 	}
 }

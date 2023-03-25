@@ -3,6 +3,7 @@
 #include <string.h>
 #include "bouton.h"
 #include "matrice.h"
+#include "rfid.h"
 
 typedef struct ville
 {
@@ -15,3 +16,4 @@ typedef struct ville
 void afficherMap(WINDOW * win, ville *choices);
 void color(int i, int highlight, ville *villes, WINDOW *win);
 int validation(WINDOW *win, ville *choices);
+void accessRFID(WINDOW *win);

@@ -36,20 +36,30 @@ int main()
 
     //------------------programme------------------//
     getmaxyx(stdscr, yMax, xMax);
+    int winHeight = 50;
+    int winWidth = 100;
+    int starty = (yMax - winHeight) / 2;
+    int startx = (xMax - winWidth) / 2;
+
+    // PHASE 0
+    PrintNuclear();
+    refresh();
+    win = newwin(yMax, xMax, 0, 0);
+    wprintw(win, "Bienvenue sur le simulateur de guerre nucléaire\n");
+    accessRFID(win);
+    endwin();
+    refresh();
+
+    bcm2835_gpio_fsel(22, BCM2835_GPIO_FSEL_INPT); 
 
     // PHASE 1
-
     win = newwin(yMax, xMax, 0, 0);
     afficherMap(win, choices);
     endwin();
     refresh();
 
     // PHASE 2
-    int winHeight = 50;
-    int winWidth = 100;
-    int starty = (yMax - winHeight) / 2;
-    int startx = (xMax - winWidth) / 2;
-    win = newwin(winHeight, winWidth, starty, startx);
+    win = newwin(winHeight, winWidth, 0, startx);
     success = validation(win, choices);
     endwin();
 
@@ -62,6 +72,20 @@ int main()
 }
 
 //------------------fonctions------------------//
+void accessRFID(WINDOW *win){
+    wprintw(win, "Veuillez scanner votre badge RFID\n");
+    char nuc_uid[23];
+    int access = 0;
+    do {
+        get_card_details(nuc_uid);
+        if(strcmp(nuc_uid, "f91e27c3"))
+            wprintw(win, "Accès autorisé\n");
+        else
+            wprintw(win, "Accès refusé\n");
+    } while (strcmp(nuc_uid, "f91e27c3"));
+}
+
+
 void afficherMap(WINDOW *win, ville *choices)
 {
     int choice;
@@ -156,7 +180,8 @@ int validation(WINDOW *win, ville *choices)
     int mdp[8];
     int j = 1, res = 4, count = 0, success = 0;
     wprintw(win, "----------------------------------------------------------------------------------------------------\n");
-    for (int i = 0; i < 10; i++)
+    int i;
+    for (i = 0; i < 10; i++)
     {
         if (choices[i].cible == 1)
         {
@@ -169,7 +194,7 @@ int validation(WINDOW *win, ville *choices)
             count++;
         }
     }
-    int i;
+
     if (count == 0)
     {
         wprintw(win, "  \n");
