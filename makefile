@@ -15,7 +15,7 @@ CCC=$(PATH_CC)/arm-linux-gnueabihf-gcc
 CXX=$(PATH_CC)/arm-linux-gnueabihf-g++
 AR=$(PATH_CC)/arm-linux-gnueabihf-gcc-ar
 
-all : screen_pi rfid matrix_test
+all : screen_pi matrix_test
 
 crea_lib : 
 	cd compileur && unzip tools-master.zip
@@ -42,25 +42,28 @@ crea_lib :
 	cd lib/ncurses-6.4/ && make -j9
 	cd lib/ncurses-6.4/ && make install
 
-screen : screen.c
-	$(CCC) $(PI_CFLAGS) $(PI_LDFLAGS) $^ -o $@ -lncurses
+screen : screen.c bouton.c
+	$(CCC) -std=c11 $(PI_CFLAGS) $(PI_LDFLAGS) $^ -o $@ -lncurses -lbcm2835 -pthread
 	
 matrice : matrice.c matrice.h
 	$(CCC) -std=c11 $(PI_CFLAGS) $(PI_LDFLAGS) $^ -o $@ -lbcm2835
 
-rfid : rfid.c
-	$(CCC) -std=c11 $(PI_CFLAGS) $(PI_LDFLAGS) $^ -o $@ -lbcm2835
+#rfid : rfid.c
+#	$(CCC) -std=c11 $(PI_CFLAGS) $(PI_LDFLAGS) $^ -o $@ -lbcm2835
+
+bouton : bouton.c
+	$(CCC) -std=c11 $(PI_CFLAGS) $(PI_LDFLAGS) $^ -o $@ -lbcm2835 -pthread
 
 install: install_prog
-install_pi : screen matrice rfid
+install_pi : screen matrice 
 	cp screen $(PATH_TPI)/bin
 	cp matrice $(PATH_TPI)/bin
-	cp rfid $(PATH_TPI)/bin
+	#cp bouton $(PATH_TPI)/bin
 	tar -zcvf Projet.tar.gz target-pi
-	scp  Projet.tar.gz pi@172.24.1.1:/home/pi
+	scp  Projet.tar.gz pi@192.168.1.181:/home/pi/Desktop/Projet/use
 
 install_prog: screen_pi
 	scp  screen_pi pi@192.168.143.111:/home/pi/screen/lib/target-pi/bin
 
 clean: 
-	rm -rf screen rfid matrice Projet.tar.gz
+	rm -rf screen rfid matrice bouton Projet.tar.gz

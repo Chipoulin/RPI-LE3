@@ -1,15 +1,18 @@
 #include <ncurses.h>
 #include <stdlib.h>
 #include <string.h>
+#include "bouton.h"
 
-typedef struct ville {
+typedef struct ville
+{
     char nom[20];
     int coorX;
     int coorY;
     int cible;
 } ville;
 
-void color(int i, int highlight, ville *villes, WINDOW *win){
+void color(int i, int highlight, ville *villes, WINDOW *win)
+{
     start_color();
 
     init_pair(1, COLOR_BLACK, COLOR_GREEN);
@@ -17,51 +20,112 @@ void color(int i, int highlight, ville *villes, WINDOW *win){
     init_pair(3, COLOR_GREEN, COLOR_YELLOW);
     init_pair(4, COLOR_RED, COLOR_YELLOW);
 
-    if(villes[i].cible){
-        if(i == highlight)
+    if (villes[i].cible)
+    {
+        if (i == highlight)
             wattron(win, COLOR_PAIR(4));
         else
             wattron(win, COLOR_PAIR(2));
-    } else {
-        if(i == highlight)
+    }
+    else
+    {
+        if (i == highlight)
             wattron(win, COLOR_PAIR(3));
         else
             wattron(win, COLOR_PAIR(1));
     }
 }
 
+void afficherMap();
+void *threadNcurses(void *arg);
+
+//------------------variables globales thread------------------//
+
+
+//------------------main------------------//
 int main()
-{
-    initscr();			/* Start curses mode 		  */
+{   
+    //------------------init------------------// 
+    if (!bcm2835_init())
+        return 1;
+
+    initscr(); /* Start curses mode 		  */
     noecho();
     cbreak();
 
+    initMatrice();
+
+    //------------------déclaration ------------------// 
+    ville choices[10] = {
+    {" Los Angeles ", 12, 13, 0},
+    {" New York ", 10, 53, 0},
+    {" Washington ", 11, 48, 0},
+    {" Londres ", 8, 69, 0},
+    {" Paris ", 9, 82, 0},
+    {" Berlin ", 8, 87, 0},
+    {" Madrid ", 11, 72, 0},
+    {" Moscou ", 7, 95, 0},
+    {" Sydney ", 29, 149, 0},
+    {" Tokyo ", 11, 144, 0}};
+
+    WINDOW *win;
+    int choice;
+    int highlight = 0;
+    int i;
     int yMax, xMax;
     getmaxyx(stdscr, yMax, xMax);
 
-    WINDOW *win = newwin(yMax, xMax, 0, 0);
+
+    win = newwin(yMax, xMax, 0, 0);
     box(win, 0, 0);
     refresh();
     wrefresh(win);
 
-    keypad(win, true);
+    afficherMap(win);
 
-    ville choices[10] = {   
-                            {" Los Angeles ", 12, 13, 0},
-                            {" New York ", 10, 53, 0},
-                            {" Washington ", 11, 48, 0},
-                            {" Londres ", 8, 69, 0},
-                            {" Paris ", 9, 82, 0},
-                            {" Berlin ", 8, 87, 0},
-                            {" Madrid ", 11, 72, 0},
-                            {" Moscou ", 7, 95, 0},
-                            {" Sydney ", 29, 149, 0},
-                            {" Tokyo ", 11, 144, 0}
-                        };
+    while (1)
+    {   
+        wrefresh(win);
+        // Affichage des choix
+        for (i = 0; i < 10; i++)
+        {
+            color(i, highlight, choices, win);
+            mvwprintw(win, choices[i].coorX, choices[i].coorY, "%s", choices[i].nom);
+        }
+        wattroff(win, COLOR_PAIR(1));
 
-    int choice;
-    int highlight = 0;
+        choice= scanMatrix();
+        
+        switch (choice)
+        {
+        case 0:
+            highlight--;
+            if (highlight == -1)
+                highlight = 9;
+            break;
+        case 3:
+            highlight++;
+            if (highlight == 10)
+                highlight = 0;
+            break;
+        case 2:
+            choices[highlight].cible = !choices[highlight].cible;
+            break;
+        default:
+            break;
+        }
+        if (choice == 1)
+            break;
+    }
+    
+    endwin(); /* End curses mode		  */
+    
+    bcm2835_close();
+    return 0;
+}
 
+void afficherMap(WINDOW *win)
+{
     wprintw(win, "                                       .____________,___ .__________ .                                                                                       \n");
     wprintw(win, "                             ._,  .__oooooooooroooooooooooooooooooooooor`            |Jooooo`      ````                  ooo___                              \n");
     wprintw(win, "                        _oo_ooo7L oooooo, ````      ``7ooooooooooooooor`              `````             ._ ````       ___ooJooooor`          Jo____          \n");
@@ -106,41 +170,4 @@ int main()
     wprintw(win, "       ``` ___Jooooooooooooooooooooooooooooooo______JL  Joooo_____Jooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo     \n");
     wprintw(win, "____L_______JooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooL_\n");
     wprintw(win, "ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo\n");
-
-    int i;
-
-    while(1) {
-        for(i = 0; i < 10; i++) {
-            color(i, highlight, choices, win);
-            mvwprintw(win, choices[i].coorX, choices[i].coorY, "%s", choices[i].nom);
-        }
-
-        wattroff(win, COLOR_PAIR(1));
-
-        choice = wgetch(win);
-
-        switch(choice) {
-            case KEY_UP:
-                highlight--;
-                if(highlight == -1)
-                    highlight = 9;
-                break;
-            case KEY_DOWN:
-                highlight++;
-                if(highlight == 10)
-                    highlight = 0;
-                break;
-            case 10:
-                choices[highlight].cible = !choices[highlight].cible;
-                break;
-            default:
-                break;
-        }
-        if(choice == ' ')
-            break;
-    }
-
-    endwin();			/* End curses mode		  */
-
-    return 0;
 }

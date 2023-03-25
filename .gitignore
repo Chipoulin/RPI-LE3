@@ -4,3 +4,4 @@ lib/*
 target-pc/*
 target-pi/*
 test
+.vscode/settings.json

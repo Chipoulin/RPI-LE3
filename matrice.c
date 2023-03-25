@@ -93,13 +93,13 @@ void CleanMatrix() {
 	}
 }
 
-// void main()
-// {
-// 	InitMatrice();
-// 	PrintWarning();
-// 	DELAY(1000);
-// 	PrintNuclear();
-// 	DELAY(1000);
-// 	ExploSequence();
-// 	CleanMatrix();
-// }
+ void main()
+ {
+ 	InitMatrice();
+ 	PrintWarning();
+ 	DELAY(1000);
+ 	PrintNuclear();
+ 	DELAY(1000);
+ 	ExploSequence();
+ 	CleanMatrix();
+ }
