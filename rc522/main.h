@@ -153,6 +153,8 @@ int disp_trailer_perm(int access, uint8_t *buff);
 /* display card detail information */
 void disp_card_details();
 
+void get_card_details(char * uid);
+
 /* calculate the access bits for a block */
 int calc_access_bits(int access, uint8_t *buff);
 
