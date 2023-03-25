@@ -198,7 +198,7 @@ int validation(WINDOW *win, ville *choices)
                 if (mdp[i] != serieValide[i])
                 {
                     wprintw(win, "  \n");
-                    wprintw(win, "| SAISIE INCORRECTE                                                                                  |\n");
+                    wprintw(win, "| SAISIE INCORRECTE                                                                                |\n");
                     wprintw(win, "| ARRET DU PROGRAMME DANS 3 SECONDES                                                               |\n");
                     wprintw(win, "  \n");
                     wprintw(win, "----------------------------------------------------------------------------------------------------\n");
