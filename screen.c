@@ -154,7 +154,7 @@ int validation(WINDOW *win, ville *choices)
 
     int serieValide[8] = {15, 11, 14, 10, 0, 8, 9, 13};
     int mdp[8];
-    int j = 0, res = 4, count = 0, success = 0;
+    int j = 1, res = 4, count = 0, success = 0;
     wprintw(win, "----------------------------------------------------------------------------------------------------\n");
     for (int i = 0; i < 10; i++)
     {
@@ -169,6 +169,7 @@ int validation(WINDOW *win, ville *choices)
             count++;
         }
     }
+    int i;
     if (count == 0)
     {
         wprintw(win, "  \n");
@@ -184,17 +185,19 @@ int validation(WINDOW *win, ville *choices)
     wprintw(win, "----------------------------------------------------------------------------------------------------\n");
     wprintw(win, "  \n");
     wprintw(win, "| SAISISSEZ LE CODE SECRET                                                                         |\n");
-    while (j < 8)
+    while (j < 9)
     {
         wrefresh(win);
         res = scanMatrix();
         if (res != 4)
         {
-            mdp[j] = res;
-            for (int i = 0; i < j; i++)
+            mdp[j-1] = res;
+            wprintw(win, "*");
+            for ( i = 0; i < j; i++)
             {
                 if (mdp[i] != serieValide[i])
                 {
+                    wprintw(win, "  \n");
                     wprintw(win, "| SAISIE INCORRECTE                                                                                  |\n");
                     wprintw(win, "| ARRET DU PROGRAMME DANS 3 SECONDES                                                               |\n");
                     wprintw(win, "  \n");
@@ -205,15 +208,18 @@ int validation(WINDOW *win, ville *choices)
                 }
                 else if (mdp[i] == serieValide[i] && i == 7)
                 {
+                    wprintw(win, "  \n");
                     wprintw(win, "| SAISIE CORRECTE                                                                                  |\n");
                     wprintw(win, "| MISSILE ENVOYE DANS 5 SECONDES                                                                   |\n");
                     wprintw(win, "  \n");
                     wprintw(win, "----------------------------------------------------------------------------------------------------\n");
-                    sleep(3);
+                    wrefresh(win);
+                    sleep(5);
                     return 1;
                 }
+                wrefresh(win);
             }
-            wprintw(win, "*");
+            
             j++;
         }
     }
