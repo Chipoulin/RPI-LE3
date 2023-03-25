@@ -42,7 +42,7 @@ crea_lib :
 	cd lib/ncurses-6.4/ && make -j9
 	cd lib/ncurses-6.4/ && make install
 
-screen : screen.c bouton.c
+screen : screen.c bouton.c matrice.c
 	$(CCC) -std=c11 $(PI_CFLAGS) $(PI_LDFLAGS) $^ -o $@ -lncurses -lbcm2835
 	
 matrice : matrice.c matrice.h
@@ -55,11 +55,8 @@ bouton : bouton.c
 	$(CCC) -std=c11 $(PI_CFLAGS) $(PI_LDFLAGS) $^ -o $@ -lbcm2835 -pthread
 
 install: install_prog
-install_pi : screen matrice rfid
+install_pi : screen
 	cp screen $(PATH_TPI)/bin
-	cp matrice $(PATH_TPI)/bin
-	#cp bouton $(PATH_TPI)/bin
-	cp rfid $(PATH_TPI)/bin
 	tar -zcvf Projet.tar.gz target-pi
 	scp  Projet.tar.gz pi@192.168.1.181:/home/pi/Desktop/Projet/use
 

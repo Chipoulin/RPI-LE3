@@ -17,7 +17,7 @@ typedef void *(*pfThread)(void *);
 
 void initCroixBtn();
 int croixPressed();
-void initMatrice();
+void initMatriceBtn();
 int activateButton(int row, int column);
 int buttonHeldDown(int pin);
 int scanMatrix();

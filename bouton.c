@@ -90,7 +90,7 @@ int buttonHeldDown(int pin)
     return 0;
 }
 
-void initMatrice()
+void initMatriceBtn()
 {
     // define 4 inputs with pull up resistors
     for (int i = 0; i < ROW_COUNT; i++)
@@ -149,7 +149,7 @@ void *threadMatrice(void *arg)
         exit(1);
     }
 
-    initMatrice();
+    initMatriceBtn();
     while (1)
     {
         *res = scanMatrix();

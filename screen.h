@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "bouton.h"
+#include "matrice.h"
 
 typedef struct ville
 {

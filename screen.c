@@ -9,12 +9,13 @@ int main()
         return 1;
 
     //curses
-    initscr(); /* Start curses mode 		  */
+    initscr();
     noecho();
     cbreak();
 
     //periphérique JOY-PI
-    initMatrice();
+    initMatriceBtn();
+    InitMatrice();
 
     //------------------déclaration ------------------//
     ville choices[10] = {
@@ -36,13 +37,20 @@ int main()
     //------------------programme------------------//
     getmaxyx(stdscr, yMax, xMax);
     
+    //PHASE 1
     win = newwin(yMax, xMax, 0, 0);
     afficherMap(win, choices);
     endwin();
 
+    //PHASE 2
     win = newwin(yMax, xMax, 0, 0);
     success = validation(win,choices);
     endwin(); 
+
+    //PHASE 3
+    if(success == 1)
+        sequence();
+    
 
     bcm2835_close();
     return 0;
@@ -210,3 +218,4 @@ void color(int i, int highlight, ville *villes, WINDOW *win)
             wattron(win, COLOR_PAIR(1));
     }
 }
+
