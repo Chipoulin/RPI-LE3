@@ -150,7 +150,7 @@ int validation(WINDOW *win, ville *choices)
     int serieValide[8] = {15, 11, 14, 10, 0, 8, 9, 13};
     int mdp[8];
     int j = 0, res = 4, count = 0, success = 0;
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < 10; i++)
     {
         if (choices[i].cible == 1){
             wprintw(win, "| %s EST CIBLEE |\n", choices[i].nom);
@@ -177,7 +177,7 @@ int validation(WINDOW *win, ville *choices)
     {
         if (mdp[i] != serieValide[i])
         {
-            wprintw(win, "ERREUR");
+            wprintw(win, "ERREUR\n");
             wprintw(win, "ARRET DU PROGRAMME");
             break;
         }else if(mdp[i] == serieValide[i] && i == 7){
