@@ -4,16 +4,16 @@
 int main()
 {
     //------------------init------------------//
-    //bcm2835
+    // bcm2835
     if (!bcm2835_init())
         return 1;
 
-    //curses
+    // curses
     initscr();
     noecho();
     cbreak();
 
-    //periphérique JOY-PI
+    // periphérique JOY-PI
     initMatriceBtn();
     InitMatrice();
 
@@ -32,25 +32,30 @@ int main()
 
     WINDOW *win;
     int yMax, xMax;
-    int success= 0;
+    int success = 0;
 
     //------------------programme------------------//
     getmaxyx(stdscr, yMax, xMax);
-    
-    //PHASE 1
+
+    // PHASE 1
+
     win = newwin(yMax, xMax, 0, 0);
     afficherMap(win, choices);
     endwin();
+    refresh();
 
-    //PHASE 2
-    win = newwin(yMax, xMax, 0, 0);
-    success = validation(win,choices);
-    endwin(); 
+    // PHASE 2
+    int winHeight = 50;
+    int winWidth = 100;
+    int starty = (yMax - winHeight) / 2;
+    int startx = (xMax - winWidth) / 2;
+    win = newwin(winHeight, winWidth, starty, startx);
+    success = validation(win, choices);
+    endwin();
 
-    //PHASE 3
-    if(success == 1)
+    // PHASE 3
+    if (success == 1)
         sequence();
-    
 
     bcm2835_close();
     return 0;
@@ -58,7 +63,7 @@ int main()
 
 //------------------fonctions------------------//
 void afficherMap(WINDOW *win, ville *choices)
-{   
+{
     int choice;
     int highlight = 0;
     int i;
@@ -150,48 +155,69 @@ int validation(WINDOW *win, ville *choices)
     int serieValide[8] = {15, 11, 14, 10, 0, 8, 9, 13};
     int mdp[8];
     int j = 0, res = 4, count = 0, success = 0;
+    wprintw(win, "----------------------------------------------------------------------------------------------------\n");
     for (int i = 0; i < 10; i++)
     {
-        if (choices[i].cible == 1){
-            wprintw(win, "| %s EST CIBLEE |\n", choices[i].nom);
-            count ++;
+        if (choices[i].cible == 1)
+        {
+            // Mesure la taille de la chaîne de caractères à afficher
+            int length = strlen(choices[i].nom) + strlen(" EST CIBLEE");
+            // Calcule le nombre d'espaces nécessaires pour atteindre 102 caractères
+            int spaces = 96 - length;
+            // Affiche la chaîne avec les espaces ajoutés
+            wprintw(win, "| %s EST CIBLEE%*s |\n", choices[i].nom, spaces, "");
+            count++;
         }
     }
     if (count == 0)
     {
-        wprintw(win, "AUCUNE VILLE SELECIONNEE ERREUR");
+        wprintw(win, "  \n");
+        wprintw(win, "| AUCUNE VILLE SELECIONNEE ERREUR                                                                  |\n");
+        wprintw(win, "| ARRET DU PROGRAMME DANS 3 SECONDES                                                               |\n");
+        wprintw(win, "  \n");
+        wprintw(win, "----------------------------------------------------------------------------------------------------\n");
+        wrefresh(win);
+        sleep(3);
+        return 0;
     }
-    
+
+    wprintw(win, "----------------------------------------------------------------------------------------------------\n");
+    wprintw(win, "  \n");
+    wprintw(win, "| SAISISSEZ LE CODE SECRET                                                                         |\n");
     while (j < 8)
     {
         wrefresh(win);
-        res =  scanMatrix();
-        if(res != 4){
+        res = scanMatrix();
+        if (res != 4)
+        {
             mdp[j] = res;
-            //wprintw(win, "%d", mdp[j]);
+            for (int i = 0; i < j; i++)
+            {
+                if (mdp[i] != serieValide[i])
+                {
+                    wprintw(win, "| SAISIE INCORRECTE                                                                                  |\n");
+                    wprintw(win, "| ARRET DU PROGRAMME DANS 3 SECONDES                                                               |\n");
+                    wprintw(win, "  \n");
+                    wprintw(win, "----------------------------------------------------------------------------------------------------\n");
+                    wrefresh(win);
+                    sleep(3);
+                    return 0;
+                }
+                else if (mdp[i] == serieValide[i] && i == 7)
+                {
+                    wprintw(win, "| SAISIE CORRECTE                                                                                  |\n");
+                    wprintw(win, "| MISSILE ENVOYE DANS 5 SECONDES                                                                   |\n");
+                    wprintw(win, "  \n");
+                    wprintw(win, "----------------------------------------------------------------------------------------------------\n");
+                    sleep(3);
+                    return 1;
+                }
+            }
+            wprintw(win, "*");
             j++;
         }
-        
     }
-    for (int i = 0; i < 8; i++)
-    {
-        if (mdp[i] != serieValide[i])
-        {
-            wprintw(win, "ERREUR\n");
-            wprintw(win, "ARRET DU PROGRAMME");
-            break;
-        }else if(mdp[i] == serieValide[i] && i == 7){
-            wprintw(win, "VALIDATION REUSSITE");
-            success = 1;
-        }
-    }
-    wrefresh(win);
-    sleep(1);
-    if (success)
-        return 1;
-    else
-        return 0;
-    
+ 
 }
 
 void color(int i, int highlight, ville *villes, WINDOW *win)
@@ -218,4 +244,3 @@ void color(int i, int highlight, ville *villes, WINDOW *win)
             wattron(win, COLOR_PAIR(1));
     }
 }
-
