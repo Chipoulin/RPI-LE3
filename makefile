@@ -61,7 +61,7 @@ install_pi : screen matrice rfid
 	#cp bouton $(PATH_TPI)/bin
 	cp rfid $(PATH_TPI)/bin
 	tar -zcvf Projet.tar.gz target-pi
-	scp  Projet.tar.gz pi@172.24.1.1:/home/pi
+	scp  Projet.tar.gz pi@192.168.1.181:/home/pi/Desktop/Projet/use
 
 clean: 
 	rm -rf screen rfid matrice bouton Projet.tar.gz
