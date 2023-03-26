@@ -43,9 +43,10 @@ int main()
 
     // PHASE 0
     PrintNuclear();
-    refresh();
-    win = newwin(yMax, xMax, 0, 0);
-    wprintw(win, "Bienvenue sur le simulateur de guerre nucléaire\n");
+
+    win = newwin(yMax, winWidth, 0, startx);
+    // wrefresh(win);
+    // sleep(2);
     accessRFID(win);
     endwin();
     refresh();
@@ -73,16 +74,25 @@ int main()
 
 //------------------fonctions------------------//
 void accessRFID(WINDOW *win){
-    wprintw(win, "Veuillez scanner votre badge RFID\n");
+    wprintw(win, "----------------------------------------------------------------------------------------------------\n");
+    wprintw(win, "\n");
+    wprintw(win, "                               Bienvenue dans la valise nucléaire\n");
+    wprintw(win, "\n");
+    wprintw(win, "----------------------------------------------------------------------------------------------------\n");
+    wprintw(win, "\n");
+    wprintw(win, "                               Veuillez scanner votre badge RFID\n");
+    wrefresh(win);
     char nuc_uid[23];
     int access = 0;
     do {
         get_card_details(nuc_uid);
         if(strcmp(nuc_uid, "f91e27c3"))
-            wprintw(win, "Accès autorisé\n");
+            wprintw(win, "                                         Accès refusé\n");
         else
-            wprintw(win, "Accès refusé\n");
+            wprintw(win, "                                        Accès autorisé\n");
+        wrefresh(win);
     } while (strcmp(nuc_uid, "f91e27c3"));
+    // sleep(2);
 }
 
 
@@ -198,8 +208,8 @@ int validation(WINDOW *win, ville *choices)
     if (count == 0)
     {
         wprintw(win, "  \n");
-        wprintw(win, "| AUCUNE VILLE SELECIONNEE ERREUR                                                                  |\n");
-        wprintw(win, "| ARRET DU PROGRAMME DANS 3 SECONDES                                                               |\n");
+        wprintw(win, "|                             AUCUNE VILLE SELECIONNEE ERREUR                                      |\n");
+        wprintw(win, "|                           ARRET DU PROGRAMME DANS 3 SECONDES                                     |\n");
         wprintw(win, "  \n");
         wprintw(win, "----------------------------------------------------------------------------------------------------\n");
         wrefresh(win);
@@ -209,7 +219,7 @@ int validation(WINDOW *win, ville *choices)
 
     wprintw(win, "----------------------------------------------------------------------------------------------------\n");
     wprintw(win, "  \n");
-    wprintw(win, "| SAISISSEZ LE CODE SECRET                                                                         |\n");
+    wprintw(win, "|                                    SAISISSEZ LE CODE SECRET                                      |\n");
     while (j < 9)
     {
         wrefresh(win);
@@ -223,8 +233,8 @@ int validation(WINDOW *win, ville *choices)
                 if (mdp[i] != serieValide[i])
                 {
                     wprintw(win, "  \n");
-                    wprintw(win, "| SAISIE INCORRECTE                                                                                |\n");
-                    wprintw(win, "| ARRET DU PROGRAMME DANS 3 SECONDES                                                               |\n");
+                    wprintw(win, "|                                       SAISIE INCORRECTE                                          |\n");
+                    wprintw(win, "|                              ARRET DU PROGRAMME DANS 3 SECONDES                                  |\n");
                     wprintw(win, "  \n");
                     wprintw(win, "----------------------------------------------------------------------------------------------------\n");
                     wrefresh(win);
@@ -234,8 +244,8 @@ int validation(WINDOW *win, ville *choices)
                 else if (mdp[i] == serieValide[i] && i == 7)
                 {
                     wprintw(win, "  \n");
-                    wprintw(win, "| SAISIE CORRECTE                                                                                  |\n");
-                    wprintw(win, "| MISSILE ENVOYE DANS 5 SECONDES                                                                   |\n");
+                    wprintw(win, "|                                       SAISIE CORRECTE                                            |\n");
+                    wprintw(win, "|                                MISSILE ENVOYE DANS 5 SECONDES                                    |\n");
                     wprintw(win, "  \n");
                     wprintw(win, "----------------------------------------------------------------------------------------------------\n");
                     wrefresh(win);
