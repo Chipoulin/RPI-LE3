@@ -45,8 +45,6 @@ int main()
     PrintNuclear();
 
     win = newwin(yMax, winWidth, 0, startx);
-    // wrefresh(win);
-    // sleep(2);
     accessRFID(win);
     endwin();
     refresh();
